@@ -7,8 +7,7 @@ public class ScoreManager : Singleton<ScoreManager>
 {
 	[SerializeField] private Text txtScore;
 	[SerializeField] private GameObject scoreAnimator;
-	[SerializeField] private Text txtAnimatedText;
-	[SerializeField] private Text txtBestScore;
+	[SerializeField] private Text txtAnimatedText;	
 	
 	[HideInInspector] public int Score = 0;
 	int bestScore = 0;
@@ -16,16 +15,14 @@ public class ScoreManager : Singleton<ScoreManager>
 	void Start()
 	{
 		txtScore.text = Score.ToString ();	
-		int bestScore = PlayerPrefs.GetInt ("BestScore_" + GameController.gameMode.ToString (), Score);
-		txtBestScore.text = bestScore.ToString();
+		int bestScore = PlayerPrefs.GetInt ("BestScore_" + GameController.gameMode.ToString (), Score);		
 
-	}
-
-	public void AddScore(int scoreToAdd, bool doAnimate = true)
+	}    
+    public void AddScore(int scoreToAdd, bool doAnimate = true)
 	{
 		int oldScore = Score;
-		Score += scoreToAdd;
-
+		Score += scoreToAdd;		
+		DDOL.Score += scoreToAdd;
 		StartCoroutine (SetScore(oldScore, Score));
 
 		if (doAnimate) {

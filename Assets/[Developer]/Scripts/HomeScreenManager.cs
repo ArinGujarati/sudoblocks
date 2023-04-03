@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-//using UnityEngine.iOS;
+using UnityEngine.iOS;
 public class HomeScreenManager : MonoBehaviour
 {
     public static HomeScreenManager Instance;
     public bool StartGame, IsGameOverOrWin;
     public GameObject homescree;
-    public GameObject MusicObject, canvas;
+    public GameObject MusicObject, canvas, ShopPanel;
     public Text ScoreText;
     public Sprite[] OnOff;
     public GameObject[] HomeScreenThemeObject;
@@ -22,8 +22,8 @@ public class HomeScreenManager : MonoBehaviour
     private void Start()
     {
         Input.multiTouchEnabled = false;
-        Time.timeScale = 1;        
-        HomeScreenThemeSet();       
+        Time.timeScale = 1;
+        HomeScreenThemeSet();
     }
     public void SoundOnOff()
     {
@@ -49,6 +49,11 @@ public class HomeScreenManager : MonoBehaviour
     }
     public void HomeScreenThemeSet()
     {
+        ScoreText.text = "Score: " + DDOL.Score;
+        HomeScreenThemeObject[10].transform.GetChild(0).GetChild(0).GetComponent<Text>().text = "" + DDOL.Change;
+        HomeScreenThemeObject[11].transform.GetChild(0).GetChild(0).GetComponent<Text>().text = "" + DDOL.Rotate;
+        HomeScreenThemeObject[12].transform.GetChild(0).GetChild(0).GetComponent<Text>().text = "" + DDOL.Undo;
+        HomeScreenThemeObject[13].transform.GetChild(0).GetChild(0).GetComponent<Text>().text = "" + DDOL.destroy;
         if (DDOL.Theme == 0)
         {
             HomeScreenThemeObject[0].GetComponent<Image>().sprite = Light_HomeScreen[0];
@@ -57,6 +62,14 @@ public class HomeScreenManager : MonoBehaviour
             HomeScreenThemeObject[3].GetComponent<Image>().sprite = Light_HomeScreen[3];
             HomeScreenThemeObject[4].GetComponent<Image>().sprite = Light_HomeScreen[4];
             HomeScreenThemeObject[5].GetComponent<Image>().sprite = Light_HomeScreen[5];
+            HomeScreenThemeObject[6].GetComponent<Image>().sprite = Light_HomeScreen[6];
+            HomeScreenThemeObject[7].GetComponent<Image>().sprite = Light_HomeScreen[7];
+            HomeScreenThemeObject[8].GetComponent<Image>().sprite = Light_HomeScreen[8];
+            HomeScreenThemeObject[9].GetComponent<Image>().sprite = Light_HomeScreen[9];
+            HomeScreenThemeObject[10].GetComponent<Image>().sprite = Light_HomeScreen[10];
+            HomeScreenThemeObject[11].GetComponent<Image>().sprite = Light_HomeScreen[11];
+            HomeScreenThemeObject[12].GetComponent<Image>().sprite = Light_HomeScreen[12];
+            HomeScreenThemeObject[13].GetComponent<Image>().sprite = Light_HomeScreen[13];
         }
         else
         {
@@ -66,6 +79,14 @@ public class HomeScreenManager : MonoBehaviour
             HomeScreenThemeObject[3].GetComponent<Image>().sprite = Dark_HomeScreen[3];
             HomeScreenThemeObject[4].GetComponent<Image>().sprite = Dark_HomeScreen[4];
             HomeScreenThemeObject[5].GetComponent<Image>().sprite = Dark_HomeScreen[5];
+            HomeScreenThemeObject[6].GetComponent<Image>().sprite = Dark_HomeScreen[6];
+            HomeScreenThemeObject[7].GetComponent<Image>().sprite = Dark_HomeScreen[7];
+            HomeScreenThemeObject[8].GetComponent<Image>().sprite = Dark_HomeScreen[8];
+            HomeScreenThemeObject[9].GetComponent<Image>().sprite = Dark_HomeScreen[9];
+            HomeScreenThemeObject[10].GetComponent<Image>().sprite = Dark_HomeScreen[10];
+            HomeScreenThemeObject[11].GetComponent<Image>().sprite = Dark_HomeScreen[11];
+            HomeScreenThemeObject[12].GetComponent<Image>().sprite = Dark_HomeScreen[12];
+            HomeScreenThemeObject[13].GetComponent<Image>().sprite = Dark_HomeScreen[13];
         }
         if (DDOL.SoundVolume == 1)
         {
@@ -90,15 +111,15 @@ public class HomeScreenManager : MonoBehaviour
     {
         Time.timeScale = 1;
         IsGameOverOrWin = false;
-        Invoke(nameof(DelayClone),.05f);
-        homescree.SetActive(false);       
+        Invoke(nameof(DelayClone), .05f);
+        homescree.SetActive(false);
     }
     public void GameOver()
     {
         if (!IsGameOverOrWin)
         {
             Time.timeScale = 0;
-            DDOL.Instance.OverClick();           
+            DDOL.Instance.OverClick();
             IsGameOverOrWin = true;
         }
     }
@@ -122,16 +143,18 @@ public class HomeScreenManager : MonoBehaviour
                 break;
             case "backtohome":
                 DDOL.Instance.ButtonClick();
-                Destroy(LevelLast);
-                HomeScreenThemeSet();
-                SetLevelNumberOpen();
+                ShopPanel.SetActive(false);
+                break;
+            case "Shop":
+                DDOL.Instance.ButtonClick();
+                ShopPanel.SetActive(true);
                 break;
             case "Home":
                 DDOL.Instance.ButtonClick();
                 IsGameOverOrWin = false;
                 Time.timeScale = 1;
                 HomeScreenThemeSet();
-                homescree.SetActive(true);               
+                homescree.SetActive(true);
                 if (LevelLast != null) Destroy(LevelLast);
                 break;
             case "Share":
@@ -152,7 +175,7 @@ public class HomeScreenManager : MonoBehaviour
                 break;
             case "Restat":
                 DDOL.Instance.ButtonClick();
-                Destroy(LevelLast);                
+                Destroy(LevelLast);
                 SetLevelNumberOpen();
                 break;
             case "Next":
@@ -161,6 +184,46 @@ public class HomeScreenManager : MonoBehaviour
                 HomeScreenThemeSet();
                 SetLevelNumberOpen();
                 break;
+            case "Undo":
+                if (DDOL.Score >= 20)
+                {                    
+                    DDOL.Instance.ButtonClick();
+                    DDOL.Score -= 20;
+                    DDOL.Undo++;
+                    ScoreText.text = "Score: " + DDOL.Score;
+                    HomeScreenThemeObject[12].transform.GetChild(0).GetChild(0).GetComponent<Text>().text = "" + DDOL.Undo;
+                }
+                break;
+            case "Destory":
+                if (DDOL.Score >= 20)
+                {
+                    DDOL.Instance.ButtonClick();
+                    DDOL.Score -= 20;
+                    DDOL.destroy++;
+                    ScoreText.text = "Score: " + DDOL.Score;
+                    HomeScreenThemeObject[13].transform.GetChild(0).GetChild(0).GetComponent<Text>().text = "" + DDOL.destroy;
+                }
+                break;
+            case "Rotate":
+                if (DDOL.Score >= 20)
+                {
+                    DDOL.Instance.ButtonClick();
+                    DDOL.Score -= 20;
+                    DDOL.Rotate++;
+                    ScoreText.text = "Score: " + DDOL.Score;
+                    HomeScreenThemeObject[11].transform.GetChild(0).GetChild(0).GetComponent<Text>().text = "" + DDOL.Rotate;
+                }
+                break;
+            case "Change":
+                if (DDOL.Score >= 20)
+                {
+                    DDOL.Instance.ButtonClick();
+                    DDOL.Score -= 20;
+                    DDOL.Change++;
+                    ScoreText.text = "Score: " + DDOL.Score;
+                    HomeScreenThemeObject[10].transform.GetChild(0).GetChild(0).GetComponent<Text>().text = "" + DDOL.Change;
+                }
+                break;            
         }
     }
 }

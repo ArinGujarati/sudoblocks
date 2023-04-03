@@ -160,10 +160,10 @@ public class GameBoardGenerator : Singleton<GameBoardGenerator>
                 }
             }
             #endregion
-/*
-            #region set score
-            ScoreManager.Instance.AddScore(previousSessionData.score, false);
-            #endregion*/
+            /*
+                        #region set score
+                        ScoreManager.Instance.AddScore(previousSessionData.score, false);
+                        #endregion*/
 
             #region moves count
             GamePlay.Instance.MoveCount = previousSessionData.movesCount;
@@ -216,8 +216,7 @@ public class GameBoardGenerator : Singleton<GameBoardGenerator>
         switch (Features)
         {
             case "Undo":
-                if (move_Block_Data.Count != 0 && DDOL.Undo != 0)
-                //&& !DestoryOneBlock && !ChangeDragBlock && !RotateDragBlock)
+                if (move_Block_Data.Count != 0 && DDOL.Undo != 0 && !DestoryOneBlock && !ChangeDragBlock && !RotateDragBlock)
                 {
                     DDOL.Undo--;
                     UpdateFeaturesPenddingText(3);
@@ -240,30 +239,39 @@ public class GameBoardGenerator : Singleton<GameBoardGenerator>
                     if (item.GetComponent<Block>().isFilled)
                     {
                         Check++;
-                        if (Check == 1 && DDOL.destroy != 0)// && !DestoryOneBlock && !ChangeDragBlock && !RotateDragBlock)
+                        if (Check == 1 && DDOL.destroy != 0 && !DestoryOneBlock && !ChangeDragBlock && !RotateDragBlock)
                         {
                             DDOL.destroy--;
                             UpdateFeaturesPenddingText(4);
                             DestoryOneBlock = true;
+                            GamePlayUI.Instance.FeaturesPopupSAnimator.Play("RightSide");
+                            GamePlayUI.Instance.FeaturesPopupSAnimator.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "Destory";
+                            GamePlayUI.Instance.FeaturesPopupSAnimator.transform.GetChild(1).GetChild(1).GetComponent<Text>().text = "Tap On Block Which One You Like To Destroy!";
                             return;
                         }
                     }
                 }
                 break;
             case "Rotate":
-                if (DDOL.Rotate != 0) //&&!DestoryOneBlock && !ChangeDragBlock && !RotateDragBlock)
+                if (DDOL.Rotate != 0 && !DestoryOneBlock && !ChangeDragBlock && !RotateDragBlock)
                 {
                     DDOL.Rotate--;
                     UpdateFeaturesPenddingText(5);
+                    GamePlayUI.Instance.FeaturesPopupSAnimator.Play("RightSide");
+                    GamePlayUI.Instance.FeaturesPopupSAnimator.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "Rotate";
+                    GamePlayUI.Instance.FeaturesPopupSAnimator.transform.GetChild(1).GetChild(1).GetComponent<Text>().text = "Tap Drag Block Which One You Like To Rotate Their Position!";
                     RotateDragBlock = true;
                     BlockShapeSpawner.Instance.AddEventTriggerCommponent();
                 }
                 break;
             case "Change":
-                if (DDOL.Change != 0) //&&!DestoryOneBlock && !ChangeDragBlock && !RotateDragBlock)
+                if (DDOL.Change != 0 && !DestoryOneBlock && !ChangeDragBlock && !RotateDragBlock)
                 {
                     DDOL.Change--;
                     UpdateFeaturesPenddingText(6);
+                    GamePlayUI.Instance.FeaturesPopupSAnimator.Play("RightSide");
+                    GamePlayUI.Instance.FeaturesPopupSAnimator.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "Change";
+                    GamePlayUI.Instance.FeaturesPopupSAnimator.transform.GetChild(1).GetChild(1).GetComponent<Text>().text = "Tap Drag Block Which One You Like To Change It!";
                     ChangeDragBlock = true;
                     BlockShapeSpawner.Instance.AddEventTriggerCommponent();
                 }
@@ -284,6 +292,7 @@ public class GameBoardGenerator : Singleton<GameBoardGenerator>
         if (DestoryOneBlock && block.isFilled)
         {
             DestoryOneBlock = false;
+            GamePlayUI.Instance.FeaturesPopupSAnimator.Play("LeftSide");
             for (int i = 0; i < move_Block_Data.Count; i++)
             {
                 for (int j = 0; j < move_Block_Data[i].LatestMove_blocks.Count; j++)
@@ -371,6 +380,7 @@ public class GameBoardGenerator : Singleton<GameBoardGenerator>
                     Check++;
                     if (Check == 9)
                     {
+                        DDOL.Instance.LineDestoryClick();
                         ScoreManager.Instance.AddScore(9 * 20);
                         foreach (GameObject b in bloxSixbySixes[i].nameblockGameObject)
                         {

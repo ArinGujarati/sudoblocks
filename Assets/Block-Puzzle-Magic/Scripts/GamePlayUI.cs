@@ -12,7 +12,8 @@ public class GamePlayUI : Singleton<GamePlayUI>
     public GameObject LossPanel, ScoreTEXT, BlockShapePanel;
     public GameObject[] Change_Theme_Object;
     public Sprite[] Light_Theme, Dark_Theme;
-
+    public GameObject Effect;
+    public Animator FeaturesPopupSAnimator;
     /// <summary>
     /// Start this instance.
     /// </summary>
@@ -61,6 +62,9 @@ public class GamePlayUI : Singleton<GamePlayUI>
             Change_Theme_Object[9].GetComponent<Image>().color = Color.black;
             Change_Theme_Object[10].GetComponent<Image>().color = Color.black;
             Change_Theme_Object[11].GetComponent<Image>().color = Color.black;
+            Change_Theme_Object[12].GetComponent<Image>().sprite = Light_Theme[11];
+            Change_Theme_Object[12].transform.GetChild(0).GetComponent<Text>().color = Color.white;
+            Change_Theme_Object[12].transform.GetChild(1).GetComponent<Text>().color = Color.black;
             bool IsFirstBlock = false;
             foreach (var item in GameBoardGenerator.Instance.AllBlock)
             {
@@ -95,7 +99,10 @@ public class GamePlayUI : Singleton<GamePlayUI>
             Change_Theme_Object[8].GetComponent<Image>().color = Color.white;
             Change_Theme_Object[9].GetComponent<Image>().color = Color.white;
             Change_Theme_Object[10].GetComponent<Image>().color = Color.white;
-            Change_Theme_Object[11].GetComponent<Image>().color = Color.white;         
+            Change_Theme_Object[11].GetComponent<Image>().color = Color.white;
+            Change_Theme_Object[12].GetComponent<Image>().sprite = Dark_Theme[11];
+            Change_Theme_Object[12].transform.GetChild(0).GetComponent<Text>().color = Color.black;
+            Change_Theme_Object[12].transform.GetChild(1).GetComponent<Text>().color = Color.white;
             bool IsFirstBlock = false;
             foreach (var item in GameBoardGenerator.Instance.AllBlock)
             {

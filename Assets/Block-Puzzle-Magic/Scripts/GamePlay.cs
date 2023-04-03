@@ -99,7 +99,7 @@ public class GamePlay : Singleton<GamePlay>, IPointerDownHandler, IPointerUpHand
     /// <param name="eventData">Event data.</param>
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (eventData.pointerCurrentRaycast.gameObject != null)
+        if (eventData.pointerCurrentRaycast.gameObject != null && !GameBoardGenerator.Instance.DestoryOneBlock)
         {
             Transform clickedObject = eventData.pointerCurrentRaycast.gameObject.transform;
 
@@ -167,7 +167,7 @@ public class GamePlay : Singleton<GamePlay>, IPointerDownHandler, IPointerUpHand
             Vector3 pos = Camera.main.ScreenToWorldPoint(eventData.position);
             pos = new Vector3(pos.x, (pos.y), 0F);
 
-            currentShape.transform.position = pos;            
+            currentShape.transform.position = pos;
             RaycastHit2D hit = Physics2D.Raycast(currentShape.GetComponent<ShapeInfo>().firstBlock.block.position, Vector2.zero, 1);
 
             if (hit.collider != null)
@@ -200,7 +200,7 @@ public class GamePlay : Singleton<GamePlay>, IPointerDownHandler, IPointerUpHand
 
         bool canPlaceShape = true;
         foreach (ShapeBlock c in currentShape.ShapeBlocks)
-        {            
+        {
             Block checkingCell = blockGrid.Find(o => o.rowID == currentRowID + (c.rowID + currentShape.startOffsetX) && o.columnID == currentColumnID + (c.columnID - currentShape.startOffsetY));
             //print("=> " + currentShape.startOffsetX + " <=> " + currentShape.startOffsetY);
             if ((checkingCell == null) || (checkingCell != null && checkingCell.isFilled))
@@ -320,6 +320,7 @@ public class GamePlay : Singleton<GamePlay>, IPointerDownHandler, IPointerUpHand
         }
 
         //Check Any Box Filled?
+        GetComponent<GameBoardGenerator>().CheckBoxIsFilled();
         GetComponent<GameBoardGenerator>().CheckBoxIsFilled();
 
 
@@ -559,7 +560,7 @@ public class GamePlay : Singleton<GamePlay>, IPointerDownHandler, IPointerUpHand
                 {
                     return false;
                 }
-            }
+            }            
         }
         return true;
     }

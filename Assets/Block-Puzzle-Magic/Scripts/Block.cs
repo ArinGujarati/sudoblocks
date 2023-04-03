@@ -73,6 +73,8 @@ public class Block : MonoBehaviour
         Sprite sprite;
         if (DDOL.Theme == 0) { sprite = GamePlayUI.Instance.Light_Theme[10]; }
         else { sprite = GamePlayUI.Instance.Dark_Theme[10]; }
+        GameObject Effect_Obj = Instantiate(GamePlayUI.Instance.Effect);
+        Effect_Obj.transform.position = transform.position;
         blockImage.sprite = sprite;
         blockImage.color = new Color(1, 1, 1, 1);
         blockID = _blockID;

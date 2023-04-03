@@ -19,6 +19,7 @@ public class FinalClass_Block_Shape
 public class Block_Shape
 {
     public List<Block_Shape_subclass> block_Shape_subclass = new List<Block_Shape_subclass>();
+    public List<string> BlockNameForRotate = new List<string>();
 }
 [System.Serializable]
 public class Block_Shape_subclass
@@ -55,8 +56,8 @@ public class BlockShapeSpawner : Singleton<BlockShapeSpawner>
             ActiveShapeBlockModule = shapeBlockList;
         }
 
-       // string json = JsonUtility.ToJson(finalClass_Block_Shape);
-       // File.WriteAllText("gamedata.json",json);        
+        //string json = JsonUtility.ToJson(finalClass_Block_Shape);        
+        //File.WriteAllText("gamedata.json",json);        
         
     }
 
@@ -289,6 +290,7 @@ public class BlockShapeSpawner : Singleton<BlockShapeSpawner>
         if (GameBoardGenerator.Instance.ChangeDragBlock && ShapeContainers[Index].childCount != 0)
         {
             GameBoardGenerator.Instance.ChangeDragBlock = false;
+            GamePlayUI.Instance.FeaturesPopupSAnimator.Play("LeftSide");
             Destroy(ShapeContainers[Index].transform.GetChild(0).gameObject);
             int RandomShape = shapeBlockProbabilityPool[0];
             shapeBlockProbabilityPool.RemoveAt(0);
@@ -303,6 +305,7 @@ public class BlockShapeSpawner : Singleton<BlockShapeSpawner>
         }
         if (GameBoardGenerator.Instance.RotateDragBlock && ShapeContainers[Index].childCount != 0)
         {
+            GamePlayUI.Instance.FeaturesPopupSAnimator.Play("LeftSide");
             Transform Rotate_Object = ShapeContainers[Index].transform.GetChild(0).transform;
             Rotate_Object.DORotate(new Vector3(0f, 0f, Rotate_Object.eulerAngles.z + 90f), .3f).SetEase(Ease.OutQuad)
                 .OnComplete(() => { BlockShapePosSet(Rotate_Object); });
@@ -325,11 +328,26 @@ public class BlockShapeSpawner : Singleton<BlockShapeSpawner>
         if (Rotate_Angel == 90) { Rotate_SubIndex = 1; }
         if (Rotate_Angel == 180) { Rotate_SubIndex = 2; }
         if (Rotate_Angel == 270) { Rotate_SubIndex = 3; }
-        //print(Rotate_Angel +" = " + Rotate_Index + " = " + Rotate_SubIndex);
+        //print(Rotate_Angel +" = " + Rotate_Index + " = " + Rotate_SubIndex);               
         for (int i = 0; i < Rotate_Object.childCount; i++)
         {
             if(finalClass_Block_Shape.block_Shapes[Rotate_Index].block_Shape_subclass.Count != 0)
             Rotate_Object.GetChild(i).name = finalClass_Block_Shape.block_Shapes[Rotate_Index].block_Shape_subclass[Rotate_SubIndex].BlockName[i];
+        }
+        foreach (var item in Rotate_Object.GetComponent<ShapeInfo>().ShapeBlocks)
+        {
+            //print(item.block.gameObject.name + " :: " + finalClass_Block_Shape.block_Shapes[Rotate_Index].BlockNameForRotate[Rotate_SubIndex]);
+            if (finalClass_Block_Shape.block_Shapes[Rotate_Index].BlockNameForRotate.Count != 0 &&
+                finalClass_Block_Shape.block_Shapes[Rotate_Index].BlockNameForRotate[Rotate_SubIndex] != "" &&
+                item.block.gameObject.name == finalClass_Block_Shape.block_Shapes[Rotate_Index].BlockNameForRotate[Rotate_SubIndex])
+            {
+                Rotate_Object.GetComponent<ShapeInfo>().firstBlock.block = item.block;
+            }
+            else if (finalClass_Block_Shape.block_Shapes[Rotate_Index].BlockNameForRotate.Count != 0 &&
+              finalClass_Block_Shape.block_Shapes[Rotate_Index].BlockNameForRotate[Rotate_SubIndex] == "")
+            {
+                Rotate_Object.GetComponent<ShapeInfo>().firstBlock.block = Rotate_Object.transform;
+            }
         }
         Rotate_Object.GetComponent<ShapeInfo>().CreateBlockList();
         GameBoardGenerator.Instance.RotateDragBlock = false;

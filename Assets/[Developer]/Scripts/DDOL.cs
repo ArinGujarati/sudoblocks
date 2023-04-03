@@ -5,7 +5,7 @@ using UnityEngine;
 public class DDOL : MonoBehaviour
 {
     public static DDOL Instance;
-    public AudioClip BtnClick, Oversound,winClip;
+    public AudioClip BtnClick, Oversound,winClip,LineDestroy;
     public AudioSource backgrounssource,effectssource;
     private void Start()
     {
@@ -38,6 +38,13 @@ public class DDOL : MonoBehaviour
             effectssource.PlayOneShot(BtnClick);
         }
     }
+    public void LineDestoryClick()
+    {
+        if (SoundVolume == 1)
+        {
+            effectssource.PlayOneShot(LineDestroy);
+        }
+    }
     public void OverClick()
     {
         if (SoundVolume == 1)
@@ -56,6 +63,12 @@ public class DDOL : MonoBehaviour
     {
         get => PlayerPrefs.GetInt("Sound", 1);
         set => PlayerPrefs.SetInt("Sound", value);
+    }
+
+    public static int Score
+    {
+        get => PlayerPrefs.GetInt("Score", 0);
+        set => PlayerPrefs.SetInt("Score", value);
     }
     public static int Theme
     {
